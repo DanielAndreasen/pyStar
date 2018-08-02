@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+
 
 class Colour:
     def __init__(self, method, feh, logg, *args, **kwargs):
@@ -9,7 +11,7 @@ class Colour:
 
     def __repr__(self):
         if hasattr(self, 'Teff'):
-            info = f'Teff: {self.Teff}K\n'
+            info = f'Teff: {self.Teff}({self.eTeff})K\n'
             return info
         return 'Nothing calculated yet. Use "Colour.getAll()"'
 
@@ -17,7 +19,7 @@ class Colour:
         B = kwargs.pop('B', '')
         V = kwargs.pop('V', '')
         b = kwargs.pop('b', '')
-        v = kwargs.pop('v', '')
+        y = kwargs.pop('y', '')
         Y = kwargs.pop('Y', '')
         S = kwargs.pop('S', '')
         B2 = kwargs.pop('B2', '')
@@ -83,19 +85,19 @@ class Colour:
 
     def _getCoefficients(self):
         if self.logg < 4.0:
-            # TODO: Read from colour for giants
-            return np.array([0.5737, 0.4882, -0.0149, 0.0563, -0.1160, -0.0114])
+            df = pd.read_csv('colourCoefficientsGiants.csv')
         else:
-            # TODO: Read from colour for dwarfs
-            return np.array([0.5002, 0.6440, -0.0690, -0.0230, -0.0566, -0.0170])
+            df = pd.read_csv('colourCoefficientsDwarfs.csv')
+        df = df[df.colour == self.colour]
+        self.eTeff = df.eTeff.values[0]
+        return df.loc[:, 'a0':'a5']
+
 
 
 
 if __name__ == '__main__':
-    c = Colour(method='Ramirez05', feh=0.2, logg=4.3, B=1.2, V=0.57)
+    c = Colour(method='Ramirez05', feh=0.2, logg=3.3, B=1.2, V=0.57)
     # Or like this:
     # c = Colour(method='Ramirez05', feh=0.2, logg=4.3, **{'B': 1.2, 'V': 0.57})
-    print(c.colour)
-    print(c.X)
     c.getAll()
-    print(c.Teff)
+    print(c)
