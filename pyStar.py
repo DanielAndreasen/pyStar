@@ -36,7 +36,7 @@ class Star:
             info += f'Spectroscopy - vsini={self.spectroscopic.vsini}km/s\n'
         return info
 
-    def getColourInformation(self, method='Torres', *args, **kwargs):
+    def getColourInformation(self, method='Ramirez05', *args, **kwargs):
         print(f'Calculating colour information from method based on: {method}')
         self.colour = Colour(method, *args, **kwargs)
         self.colour.getAll()
@@ -59,7 +59,7 @@ class Star:
 
 s1 = Star('Arcturus')
 s1.getSpectroscopicInformation([1, 2, 3], [1, 2, 3])
-s1.getColourInformation(method='Torres', feh=s1.spectroscopic.feh, logg=s1.spectroscopic.logg)
+s1.getColourInformation(method='Ramirez05', feh=s1.spectroscopic.feh, logg=s1.spectroscopic.logg)
 s1.getSeismicInformation(2.96, 110.54, 4577)
 
 print(s1)
