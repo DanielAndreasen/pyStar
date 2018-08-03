@@ -16,59 +16,32 @@ class Colour:
         return 'Nothing calculated yet. Use "Colour.getAll()"'
 
     def _getColour(self, *args, **kwargs):
-        B = kwargs.pop('B', '')
-        V = kwargs.pop('V', '')
-        b = kwargs.pop('b', '')
-        y = kwargs.pop('y', '')
-        Y = kwargs.pop('Y', '')
-        S = kwargs.pop('S', '')
-        B2 = kwargs.pop('B2', '')
-        V1 = kwargs.pop('V1', '')
-        G = kwargs.pop('G', '')
-        t = kwargs.pop('t', '')
-        RC = kwargs.pop('RC', '')
-        IC = kwargs.pop('IC', '')
-        C4245 = kwargs.pop('C4245', '')
-        C4248 = kwargs.pop('C4248', '')
-        BT = kwargs.pop('BT', '')
-        VT = kwargs.pop('VT', '')
-        J2 = kwargs.pop('J2', '')
-        H2 = kwargs.pop('H2', '')
-        K2 = kwargs.pop('K2', '')
-        if B and V:
-            return 'B-V', B-V
-        if b and y:
-            return 'b-y', b-y
-        if Y and V:
-            return 'Y-V', Y-V
-        if V and S:
-            return 'V-S', V-S
-        if B2 and V1:
-            return 'B2-V1', B2-V1
-        if B2 and G:
-            return 'B2-G', B2-G
-        if t:
-            return 't', t
-        if V and RC:
-            return 'V-RC', V-RC
-        if V and IC:
-            return 'V-IC', V-IC
-        if RC and IC:
-            return 'RC-IC', RC-IC
-        if C4245:
-            return 'C(42-45)', C4245
-        if C4248:
-            return 'C(42-48)', C4248
-        if BT and VT:
-            return 'BT-VT', BT-VT
-        if V and J2:
-            return 'V-J2', V-J2
-        if V and H2:
-            return 'V-H2', V-H2
-        if V and K2:
-            return 'V-K2', VK2
-        if VT and K2:
-            return 'VT-K2', VT-K2
+        B, V = kwargs.pop('B', ''), kwargs.pop('V', '')
+        b, y = kwargs.pop('b', ''), kwargs.pop('y', '')
+        Y, S = kwargs.pop('Y', ''), kwargs.pop('S', '')
+        B2, V1 = kwargs.pop('B2', ''), kwargs.pop('V1', '')
+        G, t = kwargs.pop('G', ''), kwargs.pop('t', '')
+        RC, IC = kwargs.pop('RC', ''), kwargs.pop('IC', '')
+        C4245, C4248 = kwargs.pop('C4245', ''), kwargs.pop('C4248', '')
+        BT, VT = kwargs.pop('BT', ''), kwargs.pop('VT', '')
+        J2, H2, K2 = kwargs.pop('J2', ''), kwargs.pop('H2', ''), kwargs.pop('K2', '')
+        if B and V: return 'B-V', B-V
+        if b and y: return 'b-y', b-y
+        if Y and V: return 'Y-V', Y-V
+        if V and S: return 'V-S', V-S
+        if B2 and V1: return 'B2-V1', B2-V1
+        if B2 and G: return 'B2-G', B2-G
+        if t: return 't', t
+        if V and RC: return 'V-RC', V-RC
+        if V and IC: return 'V-IC', V-IC
+        if RC and IC: return 'RC-IC', RC-IC
+        if C4245: return 'C(42-45)', C4245
+        if C4248: return 'C(42-48)', C4248
+        if BT and VT: return 'BT-VT', BT-VT
+        if V and J2: return 'V-J2', V-J2
+        if V and H2: return 'V-H2', V-H2
+        if V and K2: return 'V-K2', VK2
+        if VT and K2: return 'VT-K2', VT-K2
 
     def getAll(self):
         self.Teff = self.calculateTeff()
