@@ -59,7 +59,8 @@ class Star:
 
 s1 = Star('Arcturus')
 s1.getSpectroscopicInformation([1, 2, 3], [1, 2, 3])
-s1.getColourInformation(method='Ramirez05', feh=s1.spectroscopic.feh, logg=s1.spectroscopic.logg)
+s1.getColourInformation(method='Ramirez05', feh=s1.spectroscopic.feh,
+                        logg=s1.spectroscopic.logg, B=1.3, V=0.43)
 s1.getSeismicInformation(2.96, 110.54, 4577)
 
 print(s1)
