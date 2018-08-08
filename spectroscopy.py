@@ -1,26 +1,23 @@
 import numpy as np
 
-class Spectroscopy:
-    def __init__(self, wavelength, flux):
-        if not isinstance(wavelength, (list, tuple, np.ndarray)):
-            raise TypeError('Wavelength has to be list-like')
-        if not isinstance(flux, (list, tuple, np.ndarray)):
-            raise TypeError('Flux has to be list-like')
+from myTypes import listLikeType
 
+class Spectroscopy:
+    def __init__(self, wavelength: listLikeType, flux: listLikeType) -> None:
         if len(wavelength) != len(flux):
             raise ValueError('Wavelength and flux must have equal length')
 
         self.wavelength = np.asarray(wavelength)
         self.flux = np.asarray(flux)
 
-        if len(self.wavelength[self.wavelength < 0]) or len(self.flux[self.flux < 0]):
-            raise ValueError('Wavelength and flux cannot contain non-positive numbers')
+        if len(self.wavelength[self.wavelength <= 0]) or len(self.flux[self.flux < 0]):
+            raise ValueError('Wavelength and flux can only contain positive numbers')
         if np.sum(np.diff(self.wavelength) <= 0):
             raise ValueError('Wavelength have to be sorted')
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         if hasattr(self, 'Teff'):
-            info = f'Teff: {self.Teff}K\n'
+            info: str = f'Teff: {self.Teff}K\n'
             info += f'logg: {self.logg}dex\n'
             info += f'[Fe/H]: {self.feh}dex\n'
             info += f'vmicro: {self.vmicro}km/s\n'

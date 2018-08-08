@@ -1,22 +1,25 @@
+from typing import Union, List, Tuple
+
 from colour import Colour
 from seismology import Seismology
 from spectroscopy import Spectroscopy
 
+import numpy as np
+from myTypes import listLikeType
+
 
 class Star:
 
-    def __init__(self, name):
-        if not isinstance(name, str):
-            raise TypeError('Name must be a string. {} was given'.format(type(name)))
-        self.name = name
-        self.colourInformation = False
-        self.seismicInformation = False
-        self.spectroscopicInformation = False
+    def __init__(self, name: str) -> None:
+        self.name: str = name
+        self.colourInformation: bool = False
+        self.seismicInformation: bool = False
+        self.spectroscopicInformation: bool = False
 
-    def __add__(self, other):
+    def __add__(self, other) -> None:
         raise ValueError('Can not add together two stars')
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         info = f'Star: {self.name}\n'
         if self.colourInformation:
             info += f'Colour - Teff={self.colour.Teff}K\n'
@@ -36,20 +39,20 @@ class Star:
             info += f'Spectroscopy - vsini={self.spectroscopic.vsini}km/s\n'
         return info
 
-    def getColourInformation(self, method='Ramirez05', *args, **kwargs):
+    def getColourInformation(self, method: str='Ramirez05', *args, **kwargs):
         print(f'Calculating colour information from method based on: {method}')
         self.colour = Colour(method, *args, **kwargs)
         self.colour.getAll()
         self.colourInformation = True
         print('Values can be reached through: Star.colour.')
 
-    def getSeismicInformation(self, vmax, deltav, Teff):
+    def getSeismicInformation(self, vmax: float, deltav: float, Teff: int) -> None:
         self.seismic = Seismology(vmax, deltav, Teff)
         self.seismic.getAll()
         self.seismicInformation = True
         print('Values can be reached through: Star.seismic.')
 
-    def getSpectroscopicInformation(self, wavelength, flux):
+    def getSpectroscopicInformation(self, wavelength: listLikeType, flux: listLikeType) -> None:
         self.spectroscopic = Spectroscopy(wavelength, flux)
         self.spectroscopic.getAll()
         self.spectroscopicInformation = True
@@ -58,7 +61,7 @@ class Star:
 
 
 s1 = Star('Arcturus')
-s1.getSpectroscopicInformation([1, 2, 3], [1, 2, 3])
+s1.getSpectroscopicInformation(np.array([1, 2, 3]), np.array([1, 2, 3]))
 s1.getColourInformation(method='Ramirez05', feh=s1.spectroscopic.feh,
                         logg=s1.spectroscopic.logg, B=1.3, V=0.43)
 s1.getSeismicInformation(2.96, 110.54, 4577)
