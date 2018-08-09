@@ -3,6 +3,8 @@ from typing import Union, List, Tuple
 from colour import Colour
 from seismology import Seismology
 from spectroscopy import Spectroscopy
+from calibrations import Calibrations
+from enums.evolutionary_stage import Stage
 
 import numpy as np
 from myTypes import listLikeType
@@ -10,8 +12,9 @@ from myTypes import listLikeType
 
 class Star:
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, stage: Stage) -> None:
         self.name: str = name
+        self.stage: Stage = stage
         self.colourInformation: bool = False
         self.seismicInformation: bool = False
         self.spectroscopicInformation: bool = False
@@ -20,7 +23,7 @@ class Star:
         raise ValueError('Can not add together two stars')
 
     def __repr__(self) -> str:
-        info = f'Star: {self.name}\n'
+        info = f'Star: {self.name}. Evolutionary stage: {self.stage.value}\n'
         if self.colourInformation:
             info += f'Colour - Teff={self.colour.Teff}K\n'
             info += f'Colour - logg={self.colour.logg}dex\n'
@@ -60,11 +63,13 @@ class Star:
 
 
 
-s1 = Star('Arcturus')
+s1 = Star('Arcturus', Stage.GIANT)
 s1.getSpectroscopicInformation(np.array([1, 2, 3]), np.array([1, 2, 3]))
 s1.getColourInformation(method='Ramirez05', feh=s1.spectroscopic.feh,
                         logg=s1.spectroscopic.logg, B=1.3, V=0.43)
 s1.getSeismicInformation(2.96, 110.54, 4577)
 
 print(s1)
-s2 = Star('Sun')
+
+s2 = Star('Sun', Stage.DWARF)
+print(s2)
