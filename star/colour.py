@@ -63,9 +63,9 @@ class Colour:
 
     def _getCoefficients(self) -> np.ndarray:
         if self.logg < 4.0:
-            df = pd.read_csv('colourCoefficientsGiants.csv')
+            df = pd.read_csv('../data/colourCoefficientsGiants.csv')
         else:
-            df = pd.read_csv('colourCoefficientsDwarfs.csv')
+            df = pd.read_csv('../data/colourCoefficientsDwarfs.csv')
         df = df[df.colour == self.colour]
         self.eTeff = df.eTeff.values[0]
         return df.loc[:, 'a0':'a5']
