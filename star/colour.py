@@ -29,24 +29,28 @@ class Colour:
         C4245, C4248 = kwargs.pop('C4245', ''), kwargs.pop('C4248', '')
         BT, VT = kwargs.pop('BT', ''), kwargs.pop('VT', '')
         J2, H2, K2 = kwargs.pop('J2', ''), kwargs.pop('H2', ''), kwargs.pop('K2', '')
-        if B and V: return 'B-V', B-V
-        if b and y: return 'b-y', b-y
-        if Y and V: return 'Y-V', Y-V
-        if V and S: return 'V-S', V-S
-        if B2 and V1: return 'B2-V1', B2-V1
-        if B2 and G: return 'B2-G', B2-G
-        if t: return 't', t
-        if V and RC: return 'V-RC', V-RC
-        if V and IC: return 'V-IC', V-IC
-        if RC and IC: return 'RC-IC', RC-IC
-        if C4245: return 'C(42-45)', C4245
-        if C4248: return 'C(42-48)', C4248
-        if BT and VT: return 'BT-VT', BT-VT
-        if V and J2: return 'V-J2', V-J2
-        if V and H2: return 'V-H2', V-H2
-        if V and K2: return 'V-K2', V-K2
-        if VT and K2: return 'VT-K2', VT-K2
+        if self._check_colour(B, V): return 'B-V', B-V
+        if self._check_colour(b, y): return 'b-y', b-y
+        if self._check_colour(Y, V): return 'Y-V', Y-V
+        if self._check_colour(V, S): return 'V-S', V-S
+        if self._check_colour(B2, V1): return 'B2-V1', B2-V1
+        if self._check_colour(B2, G): return 'B2-G', B2-G
+        if t != "": return 't', t
+        if self._check_colour(V, RC): return 'V-RC', V-RC
+        if self._check_colour(V, IC): return 'V-IC', V-IC
+        if self._check_colour(RC, IC): return 'RC-IC', RC-IC
+        if C4245 != "": return 'C(42-45)', C4245
+        if C4248 != "": return 'C(42-48)', C4248
+        if self._check_colour(BT, VT): return 'BT-VT', BT-VT
+        if self._check_colour(V, J2): return 'V-J2', V-J2
+        if self._check_colour(V, H2): return 'V-H2', V-H2
+        if self._check_colour(V, K2): return 'V-K2', V-K2
+        if self._check_colour(VT, K2): return 'VT-K2', VT-K2
         return None, None
+
+    @staticmethod
+    def _check_colour(c1, c2):
+        return c1 != "" and c2 != ""
 
     def getAll(self) -> None:
         self.Teff = self.calculateTeff()
@@ -72,7 +76,8 @@ class Colour:
 
 
 if __name__ == '__main__':
-    c = Colour(method='Ramirez05', feh=0.2, logg=3.3, B=1.2, V=0.57)
+    # c = Colour(method='Ramirez05', feh=0.2, logg=3.3, B=1.2, V=0.57)
+    c = Colour(method='Ramirez05', feh=0.2, logg=3.3, BT=0, VT=0)
     # Or like this:
     # c = Colour(method='Ramirez05', feh=0.2, logg=4.3, **{'B': 1.2, 'V': 0.57})
     c.getAll()

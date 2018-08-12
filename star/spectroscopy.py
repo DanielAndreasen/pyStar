@@ -1,14 +1,18 @@
+from dataclasses import dataclass
 import numpy as np
 
 from myTypes import listLikeType
 
+@dataclass
 class Spectroscopy:
-    def __init__(self, wavelength: listLikeType, flux: listLikeType) -> None:
-        if len(wavelength) != len(flux):
-            raise ValueError('Wavelength and flux must have equal length')
+    wavelength: listLikeType
+    flux: listLikeType
 
+    def __post_init__(self):
         self.wavelength = np.asarray(wavelength)
         self.flux = np.asarray(flux)
+        if len(wavelength) != len(flux):
+            raise ValueError('Wavelength and flux must have equal length')
 
         if len(self.wavelength[self.wavelength <= 0]) or len(self.flux[self.flux < 0]):
             raise ValueError('Wavelength and flux can only contain positive numbers')

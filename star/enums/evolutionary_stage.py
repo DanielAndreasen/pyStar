@@ -6,6 +6,7 @@ class Stage(Enum):
     DWARF = 'DWARF'
     SUBGIANT = 'SUBGIANT'
     GIANT = 'GIANT'
+    SUPERGIANT = 'SUPERGIANT'
     WD = 'WHITE DWARF'
     NS = 'NEUTRON STAR'
     BH = 'BLACK HOLE'

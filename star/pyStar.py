@@ -1,4 +1,5 @@
-from typing import Union, List, Tuple
+# from __future__ import annotations
+from typing import Union, List, Tuple, Optional
 
 from colour import Colour
 from seismology import Seismology
@@ -6,20 +7,34 @@ from spectroscopy import Spectroscopy
 from calibrations import Calibrations
 from enums.evolutionary_stage import Stage
 from enums.spectral_type import SpectralType
-
-import numpy as np
 from myTypes import listLikeType
 
+import numpy as np
+from dataclasses import dataclass, field
 
+def getStage(spectral: SpectralType) -> Stage:
+    if spectral is None:
+        return None
+    if spectral.value['name'].endswith('V'):
+        stage = Stage.DWARF
+    elif spectral.value['name'].endswith('III'):
+        stage = Stage.GIANT
+    elif spectral.value['name'].endswith('I'):
+        stage = Stage.SUPERGIANT
+    return stage
+
+
+@dataclass
 class Star:
+    name: str
+    spectral: Optional[SpectralType] = None
+    stage: Optional[Stage] = None
+    colourInformation: bool = False
+    seismicInformation: bool = False
+    spectroscopicInformation: bool = False
 
-    def __init__(self, name: str, stage: Stage, spectral_type: SpectralType) -> None:
-        self.name: str = name
-        self.stage: Stage = stage
-        self.spectral_type: SpectralType = spectral_type
-        self.colourInformation: bool = False
-        self.seismicInformation: bool = False
-        self.spectroscopicInformation: bool = False
+    def __post_init__(self):
+        self.stage = getStage(self.spectral) if self.stage is None else self.stage
 
     def __add__(self, other) -> None:
         raise ValueError('Can not add together two stars')
@@ -27,8 +42,10 @@ class Star:
     def __repr__(self) -> str:
         info = '#' * 30 + '\n'
         info += f'## Star: {self.name}\n'
-        info += f'## Evolutionary stage: {self.stage.value}\n'
-        info += f'## Spectral type: {self.spectral_type.value}\n'
+        if self.stage is not None:
+            info += f'## Evolutionary stage: {self.stage.value}\n'
+        if self.spectral is not None:
+            info += f'## Spectral type: {self.spectral.value["name"]}\n'
         if self.colourInformation:
             info += f'# \n# Colour - Teff={self.colour.Teff}K\n'
             info += f'# Colour - logg={self.colour.logg}dex\n'
@@ -69,7 +86,7 @@ class Star:
 
 
 if __name__ == '__main__':
-    s1 = Star('Arcturus', Stage.GIANT, SpectralType.K3)
+    s1 = Star('Arcturus', SpectralType.K2III)
     s1.getSpectroscopicInformation(np.array([1, 2, 3]), np.array([1, 2, 3]))
     s1.getColourInformation(method='Ramirez05', feh=s1.spectroscopic.feh,
                             logg=s1.spectroscopic.logg, B=1.3, V=0.43)
@@ -77,5 +94,8 @@ if __name__ == '__main__':
 
     print(s1)
 
-    s2 = Star('Sun', Stage.DWARF, SpectralType.G4)
+    s2 = Star('Sun', SpectralType.G2V, Stage.BH)
     print(s2)
+
+    s3 = Star('Vega', stage=Stage.WD)
+    print(s3)

@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import astropy.constants as c
 from math import pi, log10
 
@@ -10,16 +11,22 @@ R_sun: float = c.R_sun.to('cm').value
 G: float = c.G.to('cm**3/(g*s**2)').value
 
 
+@dataclass
 class Seismology:
+    vmax: float
+    deltav: float
+    Teff: int
 
-    def __init__(self, vmax: float, deltav: float, Teff: int) -> None:
-        for variable, value in zip(('vmax', 'deltav', 'Teff'), (vmax, deltav, Teff)):
+    def __post_init__(self):
+        variables = ('vmax', 'deltav', 'Teff')
+        values = (self.vmax, self.deltav, self.Teff)
+        for variable, value in zip(variables, values):
             if value <= 0:
                 raise ValueError(f'{variable} must be positive')
 
-        self.vmax: float = vmax/vmax0
-        self.deltav: float = deltav/deltav0
-        self.Teff: float = Teff/Teff0
+        self.vmax: float = self.vmax/vmax0
+        self.deltav: float = self.deltav/deltav0
+        self.Teff: float = self.Teff/Teff0
 
     def __repr__(self) -> str:
         if hasattr(self, 'logg') and hasattr(self, 'density'):
