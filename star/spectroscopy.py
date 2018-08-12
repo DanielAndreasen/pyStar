@@ -9,9 +9,9 @@ class Spectroscopy:
     flux: listLikeType
 
     def __post_init__(self):
-        self.wavelength = np.asarray(wavelength)
-        self.flux = np.asarray(flux)
-        if len(wavelength) != len(flux):
+        self.wavelength = np.asarray(self.wavelength)
+        self.flux = np.asarray(self.flux)
+        if len(self.wavelength) != len(self.flux):
             raise ValueError('Wavelength and flux must have equal length')
 
         if len(self.wavelength[self.wavelength <= 0]) or len(self.flux[self.flux < 0]):
