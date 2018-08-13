@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from typing import Optional
 import numpy as np
 
 from myTypes import listLikeType
 from enums.units import Wavelength
 from enums.range import Range
+
 
 @dataclass
 class Spectroscopy:
