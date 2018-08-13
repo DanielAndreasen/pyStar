@@ -2,15 +2,18 @@ from dataclasses import dataclass
 import numpy as np
 
 from myTypes import listLikeType
+from enums.units import Wavelength
 
 @dataclass
 class Spectroscopy:
     wavelength: listLikeType
     flux: listLikeType
+    unit: Wavelength = Wavelength.AA
 
     def __post_init__(self):
         self.wavelength = np.asarray(self.wavelength)
         self.flux = np.asarray(self.flux)
+
         if len(self.wavelength) != len(self.flux):
             raise ValueError('Wavelength and flux must have equal length')
         if not len(self.wavelength):
@@ -18,8 +21,19 @@ class Spectroscopy:
 
         if len(self.wavelength[self.wavelength <= 0]) or len(self.flux[self.flux < 0]):
             raise ValueError('Wavelength and flux can only contain positive numbers')
-        if np.sum(np.diff(self.wavelength) <= 0):
-            raise ValueError('Wavelength have to be sorted')
+        if self.unit != Wavelength.ICM:
+            if np.sum(np.diff(self.wavelength) <= 0):
+                raise ValueError('Wavelength have to be sorted')
+        else:
+            if np.sum(np.diff(self.wavelength[::-1]) <= 0):
+                raise ValueError('Wavelength have to be sorted')
+
+        if self.unit != Wavelength.AA:
+            print('Converting the wavelength to Angstrom')
+            self.wavelength = self.wavelength * self.unit.value['conversion']
+            if self.unit == Wavelength.ICM:
+                self.wavelength = self.wavelength[::-1]
+            self.unit = Wavelength.AA
 
     def __repr__(self) -> str:
         if hasattr(self, 'Teff'):

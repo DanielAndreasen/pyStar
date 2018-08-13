@@ -2,6 +2,7 @@ import pytest
 import numpy as np
 
 from spectroscopy import Spectroscopy
+from enums.units import Wavelength
 
 
 def test_simple():
@@ -64,3 +65,32 @@ def test_flux_zero():
 def test_wavelength_not_sorted():
     with pytest.raises(ValueError):
         Spectroscopy([2, 1], [42, 21])
+
+
+def test_wavelength_not_sorted_icm():
+    with pytest.raises(ValueError):
+        Spectroscopy([1, 2], [1, 2], Wavelength.ICM)
+
+
+@pytest.mark.parametrize('w0, unit, expected', [
+    (0.0001, Wavelength.MICRON, 10),
+    (1, Wavelength.NM, 10),
+    (10, Wavelength.AA, 10),
+    (100000, Wavelength.ICM, 10)
+])
+def test_wavelength_unit(w0, unit, expected):
+    wavelength = [w0, 1000]
+    flux = [1, 2]
+    s = Spectroscopy(wavelength, flux, unit)
+    if unit != Wavelength.ICM:
+        assert s.wavelength[0] == expected
+    else:
+        assert s.wavelength[-1] == expected
+
+
+
+
+
+# def test_range_optical():
+    # wavelength =
+    # s = Spectroscopy(wavelength, flux)
