@@ -25,6 +25,10 @@ class Calibrations:
         """From Torres+ 2009"""
         return np.dot(self.v, b)
 
+    def getAll(self):
+        self.mass = self.getMass()
+        self.radius = self.getRadius()
+
 
 if __name__ == '__main__':
     cal = Calibrations(5777, 4.438, 0.00)

@@ -32,6 +32,7 @@ class Star:
     colourInformation: bool = False
     seismicInformation: bool = False
     spectroscopicInformation: bool = False
+    calibrationInformation: bool = False
 
     def __post_init__(self):
         self.stage = getStage(self.spectral) if self.stage is None else self.stage
@@ -62,6 +63,9 @@ class Star:
             info += f'# Spectroscopy - vmicro={self.spectroscopic.vmicro}km/s\n'
             info += f'# Spectroscopy - vmacro={self.spectroscopic.vmacro}km/s\n'
             info += f'# Spectroscopy - vsini={self.spectroscopic.vsini}km/s\n'
+        if self.calibrationInformation:
+            info += f'# \n# Calibration - mass={self.calibration.mass}'
+            info += f'# Calibration - radius={self.calibration.radius}'
         info += '#' * 30 + '\n'
         return info
 
@@ -84,6 +88,20 @@ class Star:
         self.spectroscopicInformation = True
         print('Values can be reached through: Star.spectroscopic.')
 
+    def getCalibration(self, Teff: Optional[int]=None,
+                             logg: Optional[float]=None,
+                             feh: Optional[float]=None) -> None:
+        if not self.spectroscopicInformation and (Teff is None or logg is None or feh is None):
+            raise ValueError('Please include spectroscopic informations: Teff, logg, and [Fe/H]')
+        Teff = self.spectroscopic.Teff if Teff is None else Teff
+        logg = self.spectroscopic.logg if logg is None else logg
+        feh = self.spectroscopic.feh if feh is None else feh
+        self.calibration = Calibrations(Teff, logg, feh)
+        self.calibration.getAll()
+        self.calibrationInformation = True
+        print('Values can be reached through: Star.calibration.')
+
+
 
 if __name__ == '__main__':
     s1 = Star('Arcturus', SpectralType.K2III)
@@ -91,7 +109,6 @@ if __name__ == '__main__':
     s1.getColourInformation(method='Ramirez05', feh=s1.spectroscopic.feh,
                             logg=s1.spectroscopic.logg, B=1.3, V=0.43)
     s1.getSeismicInformation(2.96, 110.54, 4577)
-
     print(s1)
 
     s2 = Star('Sun', SpectralType.G2V, Stage.BH)
