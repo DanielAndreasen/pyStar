@@ -3,10 +3,11 @@ import numpy as np
 
 from spectroscopy import Spectroscopy
 from enums.units import Wavelength
+from enums.range import Range
 
 
 def test_simple():
-    wavelength = np.linspace(1, 10, 100)
+    wavelength = np.linspace(4000, 9000, 100)
     flux = np.abs(np.random.random(100))
     s = Spectroscopy(wavelength, flux)
 
@@ -89,9 +90,15 @@ def test_wavelength_unit(w0, unit, expected):
         assert (s.flux == np.array([2, 1])).all()  # Bonus test
 
 
+@pytest.mark.parametrize('w0, w1, expected', [
+    (3999, 9001, Range.OPTICAL),
+    (8999, 20001, Range.NIR),
+    (100, 200, None)
+])
+def test_range_optical(w0, w1, expected):
+    wavelength = [w0, w1]
+    flux = [1, 2]
+    s = Spectroscopy(wavelength, flux)
+    s.getRange()
 
-
-
-# def test_range_optical():
-    # wavelength =
-    # s = Spectroscopy(wavelength, flux)
+    assert s.range == expected

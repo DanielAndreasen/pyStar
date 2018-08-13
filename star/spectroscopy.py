@@ -1,8 +1,10 @@
 from dataclasses import dataclass
+from typing import Optional
 import numpy as np
 
 from myTypes import listLikeType
 from enums.units import Wavelength
+from enums.range import Range
 
 @dataclass
 class Spectroscopy:
@@ -48,9 +50,23 @@ class Spectroscopy:
         return 'Nothing calculated yet. Use "Spectroscopy.getAll()"'
 
     def getAll(self):
+        self.getRange()
+        if self.range is None:
+            raise ValueError('Wavelength coverage is insufficient.')
         self.Teff: int = 4536
         self.logg: float = 3.52
         self.feh: float = 3.82
         self.vmicro: float = 0.85
         self.vmacro: float = 2.43
         self.vsini: float = 4.21
+
+    def getRange(self):
+        w_start, w_end = self.wavelength[0], self.wavelength[-1]
+        ranges = Range.__members__
+        for key in ranges:
+            r = ranges[key]
+            if w_start <= r.value['low'] and r.value['high'] <= w_end:
+                self.range: Range = r
+                break
+        else:
+            self.range = None
