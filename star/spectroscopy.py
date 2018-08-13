@@ -13,6 +13,8 @@ class Spectroscopy:
         self.flux = np.asarray(self.flux)
         if len(self.wavelength) != len(self.flux):
             raise ValueError('Wavelength and flux must have equal length')
+        if not len(self.wavelength):
+            raise ValueError('Wavelength and flux must contain data')
 
         if len(self.wavelength[self.wavelength <= 0]) or len(self.flux[self.flux < 0]):
             raise ValueError('Wavelength and flux can only contain positive numbers')
@@ -31,9 +33,9 @@ class Spectroscopy:
         return 'Nothing calculated yet. Use "Spectroscopy.getAll()"'
 
     def getAll(self):
-        self.Teff = 4536
-        self.logg = 3.52
-        self.feh = 3.82
-        self.vmicro = 0.85
-        self.vmacro = 2.43
-        self.vsini = 4.21
+        self.Teff: int = 4536
+        self.logg: float = 3.52
+        self.feh: float = 3.82
+        self.vmicro: float = 0.85
+        self.vmacro: float = 2.43
+        self.vsini: float = 4.21
