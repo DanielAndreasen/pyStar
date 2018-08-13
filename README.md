@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/DanielAndreasen/pyStar.svg?branch=master)](https://travis-ci.org/DanielAndreasen/pyStar)
+
 # pyStar
 
 I want a module that does star-stuff. I give it data (colours, asteroseismic,
