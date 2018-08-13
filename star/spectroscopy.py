@@ -33,6 +33,7 @@ class Spectroscopy:
             self.wavelength = self.wavelength * self.unit.value['conversion']
             if self.unit == Wavelength.ICM:
                 self.wavelength = self.wavelength[::-1]
+                self.flux = self.flux[::-1]
             self.unit = Wavelength.AA
 
     def __repr__(self) -> str:

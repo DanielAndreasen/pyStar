@@ -86,6 +86,7 @@ def test_wavelength_unit(w0, unit, expected):
         assert s.wavelength[0] == expected
     else:
         assert s.wavelength[-1] == expected
+        assert (s.flux == np.array([2, 1])).all()  # Bonus test
 
 
 
