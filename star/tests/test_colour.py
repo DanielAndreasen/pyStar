@@ -20,6 +20,12 @@ def test_colour_correct(c1, v1, c2, v2):
     assert isinstance(c.colour, str)
 
 
+@pytest.mark.parametrize('logg', [1, 5])
+def test_colour_dwarf_and_giant(logg):
+    c = Colour(method='Ramirez05', feh=0, logg=logg, B=0, V=0)
+    c.getAll()
+    assert hasattr(c, 'Teff')
+
 
 @pytest.mark.parametrize("c1,v1,c2,v2", [
     ('a', 0.1, 'h', 0.2),
