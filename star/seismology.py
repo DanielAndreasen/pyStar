@@ -18,15 +18,18 @@ class Seismology:
     Teff: int
 
     def __post_init__(self):
+        self.vmax: float = self.vmax/vmax0
+        self.deltav: float = self.deltav/deltav0
+        self.Teff: float = self.Teff/Teff0
         variables = ('vmax', 'deltav', 'Teff')
         values = (self.vmax, self.deltav, self.Teff)
         for variable, value in zip(variables, values):
             if value <= 0:
                 raise ValueError(f'{variable} must be positive')
 
-        self.vmax: float = self.vmax/vmax0
-        self.deltav: float = self.deltav/deltav0
-        self.Teff: float = self.Teff/Teff0
+        for variable, value in zip(variables, values):
+            if 0.1 > value or value > 10:
+                raise ValueError(f'{variable} not in range')
 
     def __repr__(self) -> str:
         if hasattr(self, 'logg') and hasattr(self, 'density'):
