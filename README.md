@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/DanielAndreasen/pyStar.svg?branch=master)](https://travis-ci.org/DanielAndreasen/pyStar)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/914ea06f3b4f489badba77583e7d46b6)](https://www.codacy.com/app/daniel.andreasen/pyStar?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DanielAndreasen/pyStar&amp;utm_campaign=Badge_Grade)
 
 # pyStar
 
