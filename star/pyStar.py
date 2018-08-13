@@ -1,5 +1,5 @@
 # from __future__ import annotations
-from typing import Union, List, Tuple, Optional
+from typing import Optional
 
 from colour import Colour
 from seismology import Seismology
@@ -10,7 +10,7 @@ from enums.spectral_type import SpectralType
 from myTypes import listLikeType
 
 import numpy as np
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 def getStage(spectral: SpectralType) -> Stage:
     if spectral is None:

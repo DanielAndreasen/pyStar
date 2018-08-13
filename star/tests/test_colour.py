@@ -38,7 +38,7 @@ def test_colour_dwarf_and_giant(logg):
 ])
 def test_colour_incorrect(c1, v1, c2, v2):
     with pytest.raises(ValueError):
-        c = Colour(method='Ramirez05', feh=0, logg=4, **{c1: v1, c2: v2})
+        Colour(method='Ramirez05', feh=0, logg=4, **{c1: v1, c2: v2})
 
 
 def test_print():

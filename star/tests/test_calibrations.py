@@ -1,4 +1,3 @@
-import pytest
 from calibrations import Calibrations
 import numpy as np
 
@@ -13,3 +12,12 @@ def test_simple():
     assert isinstance(r, float)
     assert m >= 0
     assert r >= 0
+
+
+def test_getAll():
+    c = Calibrations(5777, 4.438, 0.00)
+    c.getAll()
+    assert hasattr(c, 'mass')
+    assert hasattr(c, 'radius')
+    assert isinstance(c.mass, float)
+    assert isinstance(c.radius, float)
