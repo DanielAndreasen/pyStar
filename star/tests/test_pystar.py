@@ -53,7 +53,7 @@ def test_star_complete_flow():
     assert 'Spectroscopy' not in repr(s)
     assert 'Calibration' not in repr(s)
 
-    s.getSpectroscopicInformation([1, 2, 3], [1, 0.95, 0.84])
+    s.getSpectroscopicInformation([3000, 7000, 9000], [1, 0.95, 0.84])
     assert 'Spectroscopy' in repr(s)
     assert isinstance(s.spectroscopic, Spectroscopy)
 

@@ -102,3 +102,11 @@ def test_range_optical(w0, w1, expected):
     s.getRange()
 
     assert s.range == expected
+
+
+def test_outside_range():
+    wavelength = [1, 2]
+    flux = [1, 0.99]
+    s = Spectroscopy(wavelength, flux)
+    with pytest.raises(ValueError):
+        s.getAll()
