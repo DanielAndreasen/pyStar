@@ -115,7 +115,7 @@ class SpectralType(Enum):
 def getSpectralTypeInformation(spt: SpectralType) -> str:
     spectral = spt.value['name']
     teff = spt.value['Teff']
-    return f'Spectral type: {spectral}: Teff={teff}K'
+    return f'Spectral type: {spectral} - Teff={teff}K'
 
 
 if __name__ == '__main__':
