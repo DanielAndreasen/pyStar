@@ -4,3 +4,5 @@ matplotlib==2.0.2
 pandas==0.23.0
 dataclasses==0.6
 git+https://github.com/MariaTsantaki/spectroscopy-ML
+scikit-learn==0.19.2
+scipy==1.1.0
