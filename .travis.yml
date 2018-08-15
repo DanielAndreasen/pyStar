@@ -19,6 +19,7 @@ cache:
 install:
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
   - source activate test-environment
+  - conda install cython -y -q
   - travis_retry pip install -r requirements.txt
 
   # Testing requirements
