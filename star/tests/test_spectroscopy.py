@@ -1,5 +1,7 @@
 import pytest
 import numpy as np
+import specML
+from specML import Data
 
 from spectroscopy import Spectroscopy
 from enums.units import Wavelength
@@ -110,3 +112,21 @@ def test_outside_range():
     s = Spectroscopy(wavelength, flux)
     with pytest.raises(ValueError):
         s.getAll()
+
+
+def test_get_ml_parameters():
+    model = specML.get_model()
+    data = model.data
+    wavelength = data.get_wavelength()
+    flux = data.y.sample(1).values[0]
+    s = Spectroscopy(wavelength, flux, Wavelength.AA)
+    p = s.getMLparams(model)
+    assert len(p) == 6
+    assert hasattr(s, 'parameters')
+    assert hasattr(s, 'Teff')
+    assert hasattr(s, 'logg')
+    assert hasattr(s, 'feh')
+    assert hasattr(s, 'vmicro')
+    assert hasattr(s, 'vmacro')
+    assert hasattr(s, 'vsini')
+    assert hasattr(s, 'MLmodel')

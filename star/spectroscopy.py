@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+import specML
+from specML import Data, Model, Minimizer
 import numpy as np
 
 from myTypes import listLikeType
@@ -11,6 +13,7 @@ class Spectroscopy:
     wavelength: listLikeType
     flux: listLikeType
     unit: Wavelength = Wavelength.AA
+    verbose: bool = False
 
     def __post_init__(self):
         self.wavelength = np.asarray(self.wavelength)
@@ -60,6 +63,22 @@ class Spectroscopy:
         self.vmacro: float = 2.43
         self.vsini: float = 4.21
 
+    def getMLparams(self, model: Model) -> listLikeType:
+        self.MLmodel = model
+        self.minimizer = Minimizer(self.flux, self.MLmodel)
+        res = self.minimizer.minimize()
+        if self.verbose:
+            print('See results with "Spectroscopy.minimizer.plot()"')
+        self.Teff = int(res.x[0])
+        self.logg = round(res.x[1], 2)
+        self.feh = round(res.x[2], 2)
+        self.vmicro = self._get_vmicro()
+        self.vmacro = self._get_vmacro()
+        self.vsini = 2
+        self.parameters = [self.Teff, self.logg, self.feh, self.vmicro,
+                           self.vmacro, self.vsini]
+        return self.parameters
+
     def getRange(self):
         w_start, w_end = self.wavelength[0], self.wavelength[-1]
         ranges = Range.__members__
@@ -70,3 +89,21 @@ class Spectroscopy:
                 break
         else:
             self.range = None
+
+    def _get_vmicro(self):
+        return 1.72
+
+    def _get_vmacro(self):
+        return 3.41
+
+
+if __name__ == '__main__':
+    # NOTE: This line is very slow, but only used for testing.
+    model = specML.get_model()
+    data = model.data
+    wavelength = data.get_wavelength()
+    flux = data.y.sample(1).values[0]
+
+    s = Spectroscopy(wavelength, flux, Wavelength.AA, verbose=True)
+    p = s.getMLparams(model)
+    s.minimizer.plot()
