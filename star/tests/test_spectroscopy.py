@@ -130,3 +130,15 @@ def test_get_ml_parameters():
     assert hasattr(s, 'vmacro')
     assert hasattr(s, 'vsini')
     assert hasattr(s, 'MLmodel')
+
+
+@pytest.mark.parametrize('logg', [3, 4])
+def test_vmicro(logg):
+    s = Spectroscopy([1, 2], [1, 2])
+    s.Teff = 5777
+    s.feh = 0.00
+    s.logg = logg
+    vmicro = s._get_vmicro()
+
+    assert isinstance(vmicro, float)
+    assert vmicro >= 0
