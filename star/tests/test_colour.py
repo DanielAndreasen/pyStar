@@ -1,5 +1,5 @@
 import pytest
-from colour import Colour
+from star.colour import Colour
 
 
 @pytest.mark.parametrize("c1,v1,c2,v2", [

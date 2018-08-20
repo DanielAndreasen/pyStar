@@ -1,6 +1,6 @@
 import pytest
 
-from enums.evolutionary_stage import Stage
+from star.enums.evolutionary_stage import Stage
 
 
 def test_stages():

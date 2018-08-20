@@ -12,6 +12,8 @@ open an issue, or create a pull request.
 ## Installation
 It's python, duh... Things you need is `python3.6` and the modules listed in the
 `requirements.txt` (probably not the latest version as listed there).
+If you must, you can of course use `pip install git+https://github.com/DanielAndreasen/pyStar`
+and then `import star` for all its glory.
 
 
 ## Usage

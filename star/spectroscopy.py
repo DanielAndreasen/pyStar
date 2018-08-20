@@ -3,9 +3,9 @@ import specML
 from specML import Data, Model, Minimizer
 import numpy as np
 
-from myTypes import listLikeType
-from enums.units import Wavelength
-from enums.range import Range
+from star.myTypes import listLikeType
+from star.enums.units import Wavelength
+from star.enums.range import Range
 
 
 def _check_input(wavelength: np.ndarray, flux: np.ndarray, unit: Wavelength) -> None:

@@ -2,5 +2,8 @@ __pycache__
 .mypy_cache
 .pytest_cache
 .coverage
+build
+dist
+pyStar.egg-info
 
 *.swp

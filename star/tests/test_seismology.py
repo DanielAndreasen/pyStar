@@ -1,6 +1,6 @@
 import pytest
 
-from seismology import Seismology
+from star.seismology import Seismology
 
 vmax0: float = 3.05  # mHz
 deltav0: float = 134.9  #µHz

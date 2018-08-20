@@ -1,4 +1,4 @@
-from calibrations import Calibrations
+from star.calibrations import Calibrations
 import numpy as np
 
 

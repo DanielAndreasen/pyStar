@@ -1,13 +1,13 @@
 import pytest
 
-from enums.evolutionary_stage import Stage
-from enums.spectral_type import SpectralType
-from pyStar import getStage, Star
+from star.enums.evolutionary_stage import Stage
+from star.enums.spectral_type import SpectralType
+from star.pyStar import getStage, Star
 
-from colour import Colour
-from seismology import Seismology
-from spectroscopy import Spectroscopy
-from calibrations import Calibrations
+from star.colour import Colour
+from star.seismology import Seismology
+from star.spectroscopy import Spectroscopy
+from star.calibrations import Calibrations
 
 
 @pytest.mark.parametrize('spectral, expected', [

@@ -1,13 +1,13 @@
 # from __future__ import annotations
 from typing import Optional
 
-from colour import Colour
-from seismology import Seismology
-from spectroscopy import Spectroscopy
-from calibrations import Calibrations
-from enums.evolutionary_stage import Stage
-from enums.spectral_type import SpectralType
-from myTypes import listLikeType
+from star.colour import Colour
+from star.seismology import Seismology
+from star.spectroscopy import Spectroscopy
+from star.calibrations import Calibrations
+from star.enums.evolutionary_stage import Stage
+from star.enums.spectral_type import SpectralType
+from star.myTypes import listLikeType
 
 import numpy as np
 from dataclasses import dataclass

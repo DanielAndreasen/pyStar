@@ -3,9 +3,9 @@ import numpy as np
 import specML
 from specML import Data
 
-from spectroscopy import Spectroscopy
-from enums.units import Wavelength
-from enums.range import Range
+from star.spectroscopy import Spectroscopy
+from star.enums.units import Wavelength
+from star.enums.range import Range
 
 
 def test_simple():

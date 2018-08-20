@@ -1,7 +1,7 @@
 import pytest
 
-from enums.spectral_type import SpectralType
-from enums.spectral_type import getSpectralTypeInformation
+from star.enums.spectral_type import SpectralType
+from star.enums.spectral_type import getSpectralTypeInformation
 import numpy as np
 
 
