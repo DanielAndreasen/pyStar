@@ -8,6 +8,22 @@ from enums.units import Wavelength
 from enums.range import Range
 
 
+def _check_input(wavelength: np.ndarray, flux: np.ndarray, unit: Wavelength) -> None:
+    if len(wavelength) != len(flux):
+        raise ValueError('Wavelength and flux must have equal length')
+    if not len(wavelength):
+        raise ValueError('Wavelength and flux must contain data')
+
+    if len(wavelength[wavelength <= 0]) or len(flux[flux < 0]):
+        raise ValueError('Wavelength and flux can only contain positive numbers')
+    if unit != Wavelength.ICM:
+        if np.sum(np.diff(wavelength) <= 0):
+            raise ValueError('Wavelength have to be sorted')
+    else:
+        if np.sum(np.diff(wavelength[::-1]) <= 0):
+            raise ValueError('Wavelength have to be sorted')
+
+
 @dataclass
 class Spectroscopy:
     wavelength: listLikeType
@@ -18,20 +34,7 @@ class Spectroscopy:
     def __post_init__(self):
         self.wavelength = np.asarray(self.wavelength)
         self.flux = np.asarray(self.flux)
-
-        if len(self.wavelength) != len(self.flux):
-            raise ValueError('Wavelength and flux must have equal length')
-        if not len(self.wavelength):
-            raise ValueError('Wavelength and flux must contain data')
-
-        if len(self.wavelength[self.wavelength <= 0]) or len(self.flux[self.flux < 0]):
-            raise ValueError('Wavelength and flux can only contain positive numbers')
-        if self.unit != Wavelength.ICM:
-            if np.sum(np.diff(self.wavelength) <= 0):
-                raise ValueError('Wavelength have to be sorted')
-        else:
-            if np.sum(np.diff(self.wavelength[::-1]) <= 0):
-                raise ValueError('Wavelength have to be sorted')
+        _check_input(self.wavelength, self.flux, self.unit)
 
         if self.unit != Wavelength.AA:
             print('Converting the wavelength to Angstrom')
