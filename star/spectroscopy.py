@@ -72,8 +72,8 @@ class Spectroscopy:
         self.Teff = int(res.x[0])
         self.logg = round(res.x[1], 2)
         self.feh = round(res.x[2], 2)
-        self.vmicro = self._get_vmicro()
-        self.vmacro = self._get_vmacro()
+        self.vmicro = round(self._get_vmicro(), 2)
+        self.vmacro = round(self._get_vmacro(), 2)
         self.vsini = 2
         self.parameters = [self.Teff, self.logg, self.feh, self.vmicro,
                            self.vmacro, self.vsini]
@@ -90,10 +90,13 @@ class Spectroscopy:
         else:
             self.range = None
 
-    def _get_vmicro(self):
-        return 1.72
+    def _get_vmicro(self) -> float:
+        if self.logg >= 3.95:  # Dwarfs Tsantaki+ 2013
+            return 6.932 * self.Teff*(10**(-4)) - 0.348*self.logg - 1.437
+        else:  # Giants Adibekyan+ 2015
+            return 2.72 - 0.457*self.logg + 0.072*self.feh
 
-    def _get_vmacro(self):
+    def _get_vmacro(self) -> float:
         return 3.41
 
 
