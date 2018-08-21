@@ -142,3 +142,15 @@ def test_vmicro(logg):
 
     assert isinstance(vmicro, float)
     assert vmicro >= 0
+
+
+@pytest.mark.parametrize('logg', [4, 3, 2, 1])
+def test_vmacro(logg):
+    s = Spectroscopy([1, 2], [1, 2])
+    s.Teff = 5777
+    s.feh = 0.00
+    s.logg = logg
+    vmicro = s._get_vmacro()
+
+    assert isinstance(vmicro, float)
+    assert vmicro >= 0
