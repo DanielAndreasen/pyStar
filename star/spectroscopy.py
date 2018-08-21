@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import specML
-from specML import Data, Model, Minimizer
+from specML import Model, Minimizer
 import numpy as np
 
 from star.myTypes import listLikeType
@@ -100,7 +100,15 @@ class Spectroscopy:
             return 2.72 - 0.457*self.logg + 0.072*self.feh
 
     def _get_vmacro(self) -> float:
-        return 3.41
+        if self.logg > 3.9:  # Dwarfs
+            return 3.21 + (2.33 * (self.Teff - 5777.) * (10**(-3))) + (2.00 * ((self.Teff - 5777.)**2) * (10**(-6))) - (2.00 * (self.logg - 4.44))
+        # For subgiants and giants: Hekker & Melendez 2007
+        elif 2.9 <= self.logg <= 3.9:  # Subgiants
+            return -8.426 + (0.00241*self.Teff)
+        elif 1.5 <= self.logg < 2.9:  # Giants
+            return -3.953 + (0.00195*self.Teff)
+        else:  # Bright giants
+            return -0.214 + (0.00158*self.Teff)
 
 
 if __name__ == '__main__':
