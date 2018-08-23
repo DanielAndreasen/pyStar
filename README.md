@@ -10,10 +10,10 @@ This is an open project. If any are interested in helping feel free to contact m
 open an issue, or create a pull request.
 
 ## Installation
-It's python, duh... Things you need is `python3.6` and the modules listed in the
-`requirements.txt` (probably not the latest version as listed there).
-If you must, you can of course use `pip install git+https://github.com/DanielAndreasen/pyStar`
-and then `import star` for all its glory.
+Things you need is `python3.6` and the modules listed in the `requirements.txt`.
+It is recommended to install by running this command: `pip install git+https://github.com/DanielAndreasen/pyStar` and then
+`import star` for all its glory. This will also take care of any requirements
+not installed on your system.
 
 
 ## Usage
