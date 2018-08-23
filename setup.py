@@ -5,7 +5,7 @@ from Cython.Distutils import build_ext
 setup(
 	maintainer='Daniel T. Andreasen',
     name='pyStar',
-	version=0.1,
+	version=0.2,
 	license='MIT',
     packages=find_packages(),
     url='https://github.com/DanielAndreasey/pyStar',
