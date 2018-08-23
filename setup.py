@@ -9,5 +9,6 @@ setup(
 	license='MIT',
     packages=find_packages(),
     url='https://github.com/DanielAndreasey/pyStar',
-    cmdclass={'build_ext': build_ext}
+    cmdclass={'build_ext': build_ext},
+	package_data={'star': ['data/spec_ml_sample.hdf']}
 )

@@ -115,7 +115,7 @@ def test_outside_range():
 
 
 def test_get_ml_parameters():
-    data = Data('../data/spec_ml_sample.hdf', scale=False, with_quadratic_terms=False)
+    data = Data('data/spec_ml_sample.hdf', scale=False, with_quadratic_terms=False)
     model = specML.get_model(data=data)
     wavelength = data.get_wavelength()
     flux = data.y.sample(1).values[0]
