@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import specML
-from specML import Model, Minimizer
+from specML import Data, Model, Minimizer
 import numpy as np
 
 from star.myTypes import listLikeType
@@ -111,13 +111,18 @@ class Spectroscopy:
             return -0.214 + (0.00158*self.Teff)
 
 
-if __name__ == '__main__':
-    # NOTE: This line is very slow, but only used for testing.
-    model = specML.get_model()
-    data = model.data
+def example():  # pragma: no cover
+    from pkg_resources import resource_filename
+    fname = resource_filename('star', '/data/spec_ml_sample.hdf')
+    data = Data(fname, scale=False, with_quadratic_terms=False)
+    model = specML.get_model(data)
     wavelength = data.get_wavelength()
     flux = data.y.sample(1).values[0]
 
     s = Spectroscopy(wavelength, flux, Wavelength.AA, verbose=True)
     p = s.getMLparams(model)
     s.minimizer.plot()
+
+
+if __name__ == '__main__':
+    example()
