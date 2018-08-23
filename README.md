@@ -20,3 +20,12 @@ and then `import star` for all its glory.
 `pyStar.py` is the main module. See the example in the end of the file.
 
 The other files are classes to deal with the responsibility for other stuff.
+These also have examples at the end of the file.
+
+### Spectroscopy
+A function to showcase this class has been added. Simply run:
+
+```python
+from star import spectroscopy
+spectroscopy.example()
+```
