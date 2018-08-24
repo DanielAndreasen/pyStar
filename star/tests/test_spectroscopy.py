@@ -132,6 +132,24 @@ def test_get_ml_parameters():
     assert hasattr(s, 'MLmodel')
 
 
+def test_get_ml_parameters_wrong_length():
+    data = Data('data/spec_ml_sample.hdf', scale=False, with_quadratic_terms=False)
+    model = specML.get_model(data=data)
+    s = Spectroscopy([1, 2], [1, 2], Wavelength.AA)
+    with pytest.raises(ValueError):
+        s.getMLparams(model)
+
+
+def test_get_ml_parameters_wrong_wavelength():
+    data = Data('data/spec_ml_sample.hdf', scale=False, with_quadratic_terms=False)
+    model = specML.get_model(data=data)
+    flux = data.y.sample(1).values[0]
+    wavelength = np.linspace(1, 2, len(flux))
+    s = Spectroscopy(wavelength, flux, Wavelength.AA)
+    with pytest.raises(ValueError):
+        s.getMLparams(model)
+
+
 @pytest.mark.parametrize('logg', [3, 4])
 def test_vmicro(logg):
     s = Spectroscopy([1, 2], [1, 2])
@@ -154,3 +172,24 @@ def test_vmacro(logg):
 
     assert isinstance(vmicro, float)
     assert vmicro >= 0
+
+
+def test_interpolate():
+    s = Spectroscopy([1, 2], [0.88, 0.93])
+    wavelength = np.asarray([1, 1.5, 2])
+    s._interpolate(wavelength)
+    assert len(s.flux) == len(wavelength)
+    assert (s.flux == np.array([0.88, 0.905, 0.93])).all()
+
+
+def test_interpolate_flow():
+    data = Data('data/spec_ml_sample.hdf', scale=False, with_quadratic_terms=False)
+    model = specML.get_model(data=data)
+    wavelength = data.get_wavelength()
+    wavelength = np.append(wavelength[::2], wavelength[-1])
+    flux = data.y.sample(1).values[0]
+    flux = np.append(flux[::2], flux[-1])
+
+    s = Spectroscopy(wavelength, flux, Wavelength.AA)
+    p = s.getMLparams(model, interpolate=True)
+    assert len(p) == 6

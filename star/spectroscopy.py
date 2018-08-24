@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import specML
 from specML import Data, Model, Minimizer
 import numpy as np
+from scipy.interpolate import interp1d
 
 from star.myTypes import listLikeType
 from star.enums.units import Wavelength
@@ -29,6 +30,7 @@ class Spectroscopy:
     wavelength: listLikeType
     flux: listLikeType
     unit: Wavelength = Wavelength.AA
+    interpolate: bool = False
     verbose: bool = False
 
     def __post_init__(self):
@@ -66,8 +68,20 @@ class Spectroscopy:
         self.vmacro: float = 2.43
         self.vsini: float = 4.21
 
-    def getMLparams(self, model: Model) -> listLikeType:
+    def getMLparams(self, model: Model, interpolate: bool=False) -> listLikeType:
+        self.interpolate = interpolate
+        modelWavelength = model.data.get_wavelength()
+        if self.interpolate:
+            self._interpolate(modelWavelength)
+
         self.MLmodel = model
+        if len(modelWavelength) != len(self.wavelength):
+            raise ValueError('The length of the wavelength provided is not identical ' +
+                'to the wavelength from the model.')
+        if (modelWavelength != self.wavelength).all():
+            raise ValueError('Wavelength for model and provided are not identical.' +
+                ' Use Spectroscopy.getMLparams(model, interpolate=True) to fix.')
+
         self.minimizer = Minimizer(self.flux, self.MLmodel)
         res = self.minimizer.minimize()
         if self.verbose:
@@ -109,6 +123,11 @@ class Spectroscopy:
             return -3.953 + (0.00195*self.Teff)
         else:  # Bright giants
             return -0.214 + (0.00158*self.Teff)
+
+    def _interpolate(self, wavelength):
+        f = interp1d(self.wavelength, self.flux)
+        self.flux = f(wavelength)
+        self.wavelength = wavelength
 
 
 def example():  # pragma: no cover
