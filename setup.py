@@ -21,7 +21,7 @@ setup(
 		'scikit-learn>=0.19.2',
 		'scipy>=1.1.0',
 		'tables>=3.4.4',
-		'specML>=0.3'
+		'specML>=0.4'
 	],
 	dependency_links=[
 		'https://github.com/MariaTsantaki/spectroscopy-ML/tarball/master#egg=specML-0.3'
