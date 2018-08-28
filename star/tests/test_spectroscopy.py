@@ -196,3 +196,15 @@ def test_interpolate_flow(data):
     s = Spectroscopy(wavelength, flux, Wavelength.AA)
     p = s.getMLparams(model, interpolate=True)
     assert len(p) == 6
+
+
+def test_normalization(data):
+    wavelength = data.get_wavelength()
+    flux = data.y.sample(1).values[0] + 2
+
+    s = Spectroscopy(wavelength, flux)
+    s.normalize()
+
+    assert isinstance(s, Spectroscopy)
+    assert np.all(s.wavelength == wavelength)
+    assert np.any(s.flux != flux)
