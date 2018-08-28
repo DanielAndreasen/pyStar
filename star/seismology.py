@@ -2,9 +2,11 @@ from dataclasses import dataclass
 import astropy.constants as c
 from math import pi, log10
 
+from star.validators import val_seismology
+
 # Constants
 vmax0: float = 3.05  # mHz
-deltav0: float = 134.9  #µHz
+deltav0: float = 134.9  # µHz
 Teff0: int = 5777
 M_sun: float = c.M_sun.to('g').value
 R_sun: float = c.R_sun.to('cm').value
@@ -18,18 +20,10 @@ class Seismology:
     Teff: int
 
     def __post_init__(self):
-        self.vmax: float = self.vmax/vmax0
-        self.deltav: float = self.deltav/deltav0
-        self.Teff: float = self.Teff/Teff0
-        variables = ('vmax', 'deltav', 'Teff')
-        values = (self.vmax, self.deltav, self.Teff)
-        for variable, value in zip(variables, values):
-            if value <= 0:
-                raise ValueError(f'{variable} must be positive')
-
-        for variable, value in zip(variables, values):
-            if 0.1 > value or value > 10:
-                raise ValueError(f'{variable} not in range')
+        self.vmax: float = self.vmax / vmax0
+        self.deltav: float = self.deltav / deltav0
+        self.Teff: float = self.Teff / Teff0
+        val_seismology.check_input(self.vmax, self.deltav, self.Teff)
 
     def __repr__(self) -> str:
         if hasattr(self, 'logg') and hasattr(self, 'density'):
@@ -48,12 +42,12 @@ class Seismology:
 
     def getMass(self) -> float:
         """From Kjeldsen & Bedding 1995"""
-        self.mass: float = round((self.vmax)**3 * (self.deltav)**(-4) * self.Teff**(3/2), 2)
+        self.mass: float = round((self.vmax)**3 * (self.deltav)**(-4) * self.Teff**(3 / 2), 2)
         return self.mass
 
     def getRadius(self) -> float:
         """From Kjeldsen & Bedding 1995"""
-        self.radius: float = round(self.vmax**3 * self.deltav**(-2) * self.Teff**(3/2), 2)
+        self.radius: float = round(self.vmax**3 * self.deltav**(-2) * self.Teff**(3 / 2), 2)
         return self.radius
 
     def getDensity(self) -> float:
@@ -61,7 +55,7 @@ class Seismology:
             self.radius = self.getRadius()
         if not hasattr(self, 'mass'):
             self.mass = self.getMass()
-        self.density: float = round((self.mass*M_sun) / (4/3*pi*(self.radius*R_sun)**3), 2)
+        self.density: float = round((self.mass * M_sun) / (4 / 3 * pi * (self.radius * R_sun)**3), 2)
         return self.density
 
     def getGravity(self) -> float:
@@ -70,7 +64,7 @@ class Seismology:
         if not hasattr(self, 'mass'):
             self.mass = self.getMass()
 
-        self.g: float = G*self.mass*M_sun/((self.radius*R_sun)**2)
+        self.g: float = G * self.mass * M_sun / ((self.radius * R_sun)**2)
         self.logg: float = round(log10(self.g), 2)
         return self.logg
 

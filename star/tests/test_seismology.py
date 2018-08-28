@@ -3,7 +3,7 @@ import pytest
 from star.seismology import Seismology
 
 vmax0: float = 3.05  # mHz
-deltav0: float = 134.9  #µHz
+deltav0: float = 134.9  # µHz
 Teff0: int = 5777
 
 
@@ -18,9 +18,9 @@ def test_simple():
     assert isinstance(s.deltav, float)
     assert isinstance(s.Teff, float)
 
-    assert s.vmax == 1/vmax0
-    assert s.deltav == deltav/deltav0
-    assert s.Teff == Teff/Teff0
+    assert s.vmax == 1 / vmax0
+    assert s.deltav == deltav / deltav0
+    assert s.Teff == Teff / Teff0
 
     assert repr(s) == 'Nothing calculated yet. Use "Seismology.getAll()"'
 

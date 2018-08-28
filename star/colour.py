@@ -1,6 +1,8 @@
 from typing import Tuple, Union
+from collections import OrderedDict
 import numpy as np
 import pandas as pd
+
 
 class Colour:
     def __init__(self, method: str, feh: float, logg: float, *args, **kwargs) -> None:
@@ -28,29 +30,38 @@ class Colour:
         RC, IC = kwargs.pop('RC', ''), kwargs.pop('IC', '')
         C4245, C4248 = kwargs.pop('C4245', ''), kwargs.pop('C4248', '')
         BT, VT = kwargs.pop('BT', ''), kwargs.pop('VT', '')
-        J2, H2, K2 = kwargs.pop('J2', ''), kwargs.pop('H2', ''), kwargs.pop('K2', '')
-        if self._check_colour(B, V): return 'B-V', B-V
-        if self._check_colour(b, y): return 'b-y', b-y
-        if self._check_colour(Y, V): return 'Y-V', Y-V
-        if self._check_colour(V, S): return 'V-S', V-S
-        if self._check_colour(B2, V1): return 'B2-V1', B2-V1
-        if self._check_colour(B2, G): return 'B2-G', B2-G
-        if t != "": return 't', t
-        if self._check_colour(V, RC): return 'V-RC', V-RC
-        if self._check_colour(V, IC): return 'V-IC', V-IC
-        if self._check_colour(RC, IC): return 'RC-IC', RC-IC
-        if C4245 != "": return 'C(42-45)', C4245
-        if C4248 != "": return 'C(42-48)', C4248
-        if self._check_colour(BT, VT): return 'BT-VT', BT-VT
-        if self._check_colour(V, J2): return 'V-J2', V-J2
-        if self._check_colour(V, H2): return 'V-H2', V-H2
-        if self._check_colour(V, K2): return 'V-K2', V-K2
-        if self._check_colour(VT, K2): return 'VT-K2', VT-K2
-        return None, None
+        J2, H2 = kwargs.pop('J2', ''), kwargs.pop('H2', '')
+        K2 = kwargs.pop('K2', '')
+
+        d = OrderedDict({'B-V': self._getValue(B, V),
+                         'b-y': self._getValue(b, y),
+                         'Y-V': self._getValue(Y, V),
+                         'V-S': self._getValue(V, S),
+                         'B2-V1': self._getValue(B2, V1),
+                         'B2-G': self._getValue(B2, G),
+                         't': t,
+                         'V-RC': self._getValue(V, RC),
+                         'V-IC': self._getValue(V, IC),
+                         'RC-IC': self._getValue(RC, IC),
+                         'C(42-45)': C4245,
+                         'C(42-48)': C4248,
+                         'BT-VT': self._getValue(BT, VT),
+                         'V-J2': self._getValue(V, J2),
+                         'V-H2': self._getValue(V, H2),
+                         'V-K2': self._getValue(V, K2),
+                         'VT-K2': self._getValue(VT, K2)})
+        for key, value in d.items():
+            if isinstance(value, (float, int)):
+                return key, d[key]
+        else:
+            return None, None
 
     @staticmethod
-    def _check_colour(c1, c2):
-        return c1 != "" and c2 != ""
+    def _getValue(c1, c2):
+        if c1 == '' or c2 == '':
+            return ''
+        else:
+            return c1 - c2
 
     def getAll(self) -> None:
         self.Teff = self.calculateTeff()
@@ -62,7 +73,8 @@ class Colour:
 
     def _calcTheta(self) -> float:
         a: np.ndarray = self._getCoefficients()
-        v: np.ndarray = np.array([1, self.X, self.X**2, self.X*self.feh, self.feh, self.feh**2])
+        v: np.ndarray = np.array(
+            [1, self.X, self.X**2, self.X * self.feh, self.feh, self.feh**2])
         return np.dot(a, v)
 
     def _getCoefficients(self) -> np.ndarray:

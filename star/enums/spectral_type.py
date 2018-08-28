@@ -1,6 +1,7 @@
 from enum import Enum
 import numpy as np
 
+
 # https://sites.uni.edu/morgans/astro/course/Notes/section2/spectraltemps.html
 class SpectralType(Enum):
     # Dwarfs
@@ -111,6 +112,7 @@ class SpectralType(Enum):
     M3I = {'name': 'M3I', 'Teff': 3300, 'M': -5.3, 'L': 54000}
     M4I = {'name': 'M4I', 'Teff': 3100, 'M': -5.2, 'L': 56000}
     M5I = {'name': 'M5I', 'Teff': 2950, 'M': -5.2, 'L': 58000}
+
 
 def getSpectralTypeInformation(spt: SpectralType) -> str:
     spectral = spt.value['name']

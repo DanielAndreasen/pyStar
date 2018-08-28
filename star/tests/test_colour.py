@@ -14,7 +14,7 @@ from star.colour import Colour
 def test_colour_correct(c1, v1, c2, v2):
     c = Colour(method='Ramirez05', feh=0, logg=4, **{c1: v1, c2: v2})
     assert isinstance(c, Colour)
-    assert c.X == v1-v2
+    assert c.X == v1 - v2
     assert isinstance(c.X, float)
     assert c.colour == f'{c1}-{c2}'
     assert isinstance(c.colour, str)

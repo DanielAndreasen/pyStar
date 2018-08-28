@@ -7,9 +7,11 @@ from star.calibrations import Calibrations
 from star.enums.evolutionary_stage import Stage
 from star.enums.spectral_type import SpectralType
 from star.myTypes import listLikeType
+from star.validators import val_pystar
 
 import numpy as np
 from dataclasses import dataclass
+
 
 def getStage(spectral: SpectralType) -> Stage:
     if spectral is None:
@@ -87,11 +89,10 @@ class Star:
         self.spectroscopicInformation = True
         print('Values can be reached through: Star.spectroscopic.')
 
-    def getCalibration(self, Teff: Optional[int]=None,
-                             logg: Optional[float]=None,
-                             feh: Optional[float]=None) -> None:
-        if not self.spectroscopicInformation and (Teff is None or logg is None or feh is None):
-            raise ValueError('Please include spectroscopic informations: Teff, logg, and [Fe/H]')
+    def getCalibration(self, Teff: Optional[int]=None, logg: Optional[float]=None,
+                       feh: Optional[float]=None) -> None:
+        val_pystar.check_calibration_input(self.spectroscopicInformation,
+                                           Teff, logg, feh)
         Teff = self.spectroscopic.Teff if Teff is None else Teff
         logg = self.spectroscopic.logg if logg is None else logg
         feh = self.spectroscopic.feh if feh is None else feh
@@ -99,7 +100,6 @@ class Star:
         self.calibration.getAll()
         self.calibrationInformation = True
         print('Values can be reached through: Star.calibration.')
-
 
 
 if __name__ == '__main__':

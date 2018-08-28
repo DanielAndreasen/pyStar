@@ -1,11 +1,18 @@
 import pytest
 import numpy as np
 import specML
-from specML import Data
 
 from star.spectroscopy import Spectroscopy
 from star.enums.units import Wavelength
 from star.enums.range import Range
+
+
+@pytest.fixture
+def data():
+    from specML import Data
+    return Data('data/spec_ml_sample.hdf',
+                scale=False,
+                with_quadratic_terms=False)
 
 
 def test_simple():
@@ -114,8 +121,7 @@ def test_outside_range():
         s.getAll()
 
 
-def test_get_ml_parameters():
-    data = Data('data/spec_ml_sample.hdf', scale=False, with_quadratic_terms=False)
+def test_get_ml_parameters(data):
     model = specML.get_model(data=data)
     wavelength = data.get_wavelength()
     flux = data.y.sample(1).values[0]
@@ -132,16 +138,14 @@ def test_get_ml_parameters():
     assert hasattr(s, 'MLmodel')
 
 
-def test_get_ml_parameters_wrong_length():
-    data = Data('data/spec_ml_sample.hdf', scale=False, with_quadratic_terms=False)
+def test_get_ml_parameters_wrong_length(data):
     model = specML.get_model(data=data)
     s = Spectroscopy([1, 2], [1, 2], Wavelength.AA)
     with pytest.raises(ValueError):
         s.getMLparams(model)
 
 
-def test_get_ml_parameters_wrong_wavelength():
-    data = Data('data/spec_ml_sample.hdf', scale=False, with_quadratic_terms=False)
+def test_get_ml_parameters_wrong_wavelength(data):
     model = specML.get_model(data=data)
     flux = data.y.sample(1).values[0]
     wavelength = np.linspace(1, 2, len(flux))
@@ -182,8 +186,7 @@ def test_interpolate():
     assert (s.flux == np.array([0.88, 0.905, 0.93])).all()
 
 
-def test_interpolate_flow():
-    data = Data('data/spec_ml_sample.hdf', scale=False, with_quadratic_terms=False)
+def test_interpolate_flow(data):
     model = specML.get_model(data=data)
     wavelength = data.get_wavelength()
     wavelength = np.append(wavelength[::2], wavelength[-1])

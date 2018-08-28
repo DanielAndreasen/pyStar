@@ -7,22 +7,7 @@ from scipy.interpolate import interp1d
 from star.myTypes import listLikeType
 from star.enums.units import Wavelength
 from star.enums.range import Range
-
-
-def _check_input(wavelength: np.ndarray, flux: np.ndarray, unit: Wavelength) -> None:
-    if len(wavelength) != len(flux):
-        raise ValueError('Wavelength and flux must have equal length')
-    if not len(wavelength):
-        raise ValueError('Wavelength and flux must contain data')
-
-    if len(wavelength[wavelength <= 0]) or len(flux[flux < 0]):
-        raise ValueError('Wavelength and flux can only contain positive numbers')
-    if unit != Wavelength.ICM:
-        if np.sum(np.diff(wavelength) <= 0):
-            raise ValueError('Wavelength have to be sorted')
-    else:
-        if np.sum(np.diff(wavelength[::-1]) <= 0):
-            raise ValueError('Wavelength have to be sorted')
+from star.validators import val_spectroscopy
 
 
 @dataclass
@@ -36,7 +21,7 @@ class Spectroscopy:
     def __post_init__(self):
         self.wavelength = np.asarray(self.wavelength)
         self.flux = np.asarray(self.flux)
-        _check_input(self.wavelength, self.flux, self.unit)
+        val_spectroscopy.check_input(self.wavelength, self.flux, self.unit)
 
         if self.unit != Wavelength.AA:
             print('Converting the wavelength to Angstrom')
@@ -68,20 +53,17 @@ class Spectroscopy:
         self.vmacro: float = 2.43
         self.vsini: float = 4.21
 
-    def getMLparams(self, model: Model, interpolate: bool=False) -> listLikeType:
+    def getMLparams(self,
+                    model: Model,
+                    interpolate: bool=False) -> listLikeType:
         self.interpolate = interpolate
         modelWavelength = model.data.get_wavelength()
         if self.interpolate:
             self._interpolate(modelWavelength)
 
-        self.MLmodel = model
-        if len(modelWavelength) != len(self.wavelength):
-            raise ValueError('The length of the wavelength provided is not identical ' +
-                'to the wavelength from the model.')
-        if (modelWavelength != self.wavelength).all():
-            raise ValueError('Wavelength for model and provided are not identical.' +
-                ' Use Spectroscopy.getMLparams(model, interpolate=True) to fix.')
+        val_spectroscopy.check_MLmodel(modelWavelength, self.wavelength)
 
+        self.MLmodel = model
         self.minimizer = Minimizer(self.flux, self.MLmodel)
         res = self.minimizer.minimize()
         if self.verbose:
@@ -109,20 +91,24 @@ class Spectroscopy:
 
     def _get_vmicro(self) -> float:
         if self.logg >= 3.95:  # Dwarfs Tsantaki+ 2013
-            return 6.932 * self.Teff*(10**(-4)) - 0.348*self.logg - 1.437
+            return 6.932 * self.Teff * (10 ** (-4)) - 0.348 * self.logg - 1.437
         else:  # Giants Adibekyan+ 2015
-            return 2.72 - 0.457*self.logg + 0.072*self.feh
+            return 2.72 - 0.457 * self.logg + 0.072 * self.feh
 
     def _get_vmacro(self) -> float:
         if self.logg > 3.9:  # Dwarfs
-            return 3.21 + (2.33 * (self.Teff - 5777.) * (10**(-3))) + (2.00 * ((self.Teff - 5777.)**2) * (10**(-6))) - (2.00 * (self.logg - 4.44))
+            T = self.Teff - 5777
+            g = self.logg - 4.44
+            c = np.array([3.21, 2.33 * 10**(-3), 2.00 * 10**(-6), -2.00])
+            p = np.array([1, T, T**2, g])
+            return np.dot(c, p)
         # For subgiants and giants: Hekker & Melendez 2007
         elif 2.9 <= self.logg <= 3.9:  # Subgiants
-            return -8.426 + (0.00241*self.Teff)
+            return -8.426 + (0.00241 * self.Teff)
         elif 1.5 <= self.logg < 2.9:  # Giants
-            return -3.953 + (0.00195*self.Teff)
+            return -3.953 + (0.00195 * self.Teff)
         else:  # Bright giants
-            return -0.214 + (0.00158*self.Teff)
+            return -0.214 + (0.00158 * self.Teff)
 
     def _interpolate(self, wavelength):
         f = interp1d(self.wavelength, self.flux)
@@ -140,6 +126,7 @@ def example():  # pragma: no cover
 
     s = Spectroscopy(wavelength, flux, Wavelength.AA, verbose=True)
     p = s.getMLparams(model)
+    print('Parameters: ', p)
     s.minimizer.plot()
 
 

@@ -25,11 +25,11 @@ def test_star_simple():
     s = Star('Sun')
 
     assert isinstance(s, Star)
-    assert s.spectral == None
-    assert s.stage == None
-    assert s.colourInformation == False
-    assert s.seismicInformation == False
-    assert s.spectroscopicInformation == False
+    assert s.spectral is None
+    assert s.stage is None
+    assert s.colourInformation is False
+    assert s.seismicInformation is False
+    assert s.spectroscopicInformation is False
 
     assert 'Sun' in repr(s)
     assert 'Evolutionary stage' not in repr(s)
