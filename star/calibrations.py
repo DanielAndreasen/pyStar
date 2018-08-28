@@ -13,17 +13,17 @@ class Calibrations:
     feh: float
 
     def __post_init__(self):
-        self.TeffX: float = np.log(self.Teff) - 4.1
-        self.v: np.ndarray = np.array([1, self.TeffX, self.TeffX**2, self.TeffX**3,
-                                       self.logg**2, self.logg**3, self.feh])
+        X: float = np.log10(self.Teff) - 4.1
+        self.v: np.ndarray = np.array([1, X, X**2, X**3, self.logg**2,
+                                       self.logg**3, self.feh])
 
     def getMass(self) -> float:
         """From Torres+ 2009"""
-        return np.dot(self.v, a)
+        return np.exp(np.dot(self.v, a))
 
     def getRadius(self) -> float:
         """From Torres+ 2009"""
-        return np.dot(self.v, b)
+        return np.exp(np.dot(self.v, b))
 
     def getAll(self):
         self.mass = self.getMass()
@@ -31,7 +31,6 @@ class Calibrations:
 
 
 if __name__ == '__main__':
-    # TODO: Test that this return 1.00M and 1.00R
     cal = Calibrations(5777, 4.438, 0.00)
     print(cal.getMass())
     print(cal.getRadius())

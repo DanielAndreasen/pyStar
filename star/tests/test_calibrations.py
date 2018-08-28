@@ -6,7 +6,6 @@ def test_simple():
     c = Calibrations(5777, 4.438, 0.00)
     m = c.getMass()
     r = c.getRadius()
-    assert isinstance(c.TeffX, float)
     assert isinstance(c.v, np.ndarray)
     assert isinstance(m, float)
     assert isinstance(r, float)
@@ -21,3 +20,10 @@ def test_getAll():
     assert hasattr(c, 'radius')
     assert isinstance(c.mass, float)
     assert isinstance(c.radius, float)
+
+
+def test_sun():
+    c = Calibrations(5777, 4.428, 0.00)
+    c.getAll()
+    assert round(c.mass) == 1  # Allow for scatter from calibration
+    assert round(c.radius) == 1  # Allow for scatter from calibration
