@@ -1,11 +1,12 @@
 from setuptools import setup, find_packages
 from Cython.Distutils import build_ext
+import star
 
 
 setup(
-	maintainer='Daniel T. Andreasen',
-    name='pyStar',
-	version=0.2,
+	maintainer=star.__author__,
+    name=star.__name__,
+	version=star.__version__,
 	long_description=open('README.md').read(),
 	license='MIT',
     packages=find_packages(),
@@ -24,6 +25,6 @@ setup(
 		'specML>=0.4'
 	],
 	dependency_links=[
-		'https://github.com/MariaTsantaki/spectroscopy-ML/tarball/master#egg=specML-0.3'
+		'https://github.com/MariaTsantaki/spectroscopy-ML/tarball/master#egg=specML-0.4'
 	]
 )
