@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import specML
 from specML import Data, Model, Minimizer
+from spectrum_overload import Spectrum
 import numpy as np
 from scipy.interpolate import interp1d
 
@@ -30,6 +31,7 @@ class Spectroscopy:
                 self.wavelength = self.wavelength[::-1]
                 self.flux = self.flux[::-1]
             self.unit = Wavelength.AA
+        self.spectrum: Spectrum = Spectrum(self.flux, self.wavelength)
 
     def __repr__(self) -> str:
         if hasattr(self, 'Teff'):
@@ -88,6 +90,11 @@ class Spectroscopy:
                 break
         else:
             self.range = None
+
+    def normalize(self, method='scalar', degree=None, **kwargs):
+        self.spectrum = self.spectrum.normalize(method, degree, **kwargs)
+        self.wavelength = self.spectrum.xaxis
+        self.flux = self.spectrum.flux
 
     def _get_vmicro(self) -> float:
         if self.logg >= 3.95:  # Dwarfs Tsantaki+ 2013
