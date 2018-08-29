@@ -21,18 +21,14 @@ def test_flow(isochrone):
     assert hasattr(isochrone, 'radius')
     assert hasattr(isochrone, 'age')
 
-    assert 'age' in repr(isochrone)
-
-
-def test_parameters(isochrone):
-    isochrone.getAll()
-
     assert isinstance(isochrone.mass, float)
     assert isochrone.mass > 0
     assert isinstance(isochrone.radius, float)
     assert isochrone.radius > 0
     assert isinstance(isochrone.age, float)
     assert isochrone.age > 0
+
+    assert 'age' in repr(isochrone)
 
 
 @pytest.mark.parametrize('teff, logg, feh', [
