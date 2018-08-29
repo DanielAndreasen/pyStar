@@ -4,6 +4,7 @@ from star.colour import Colour
 from star.seismology import Seismology
 from star.spectroscopy import Spectroscopy
 from star.calibrations import Calibrations
+from star.isochrone import Isochrone
 from star.enums.evolutionary_stage import Stage
 from star.enums.spectral_type import SpectralType
 from star.myTypes import listLikeType
@@ -34,6 +35,7 @@ class Star:
     seismicInformation: bool = False
     spectroscopicInformation: bool = False
     calibrationInformation: bool = False
+    isochroneInformation: bool = False
 
     def __post_init__(self):
         self.stage = getStage(self.spectral) if self.stage is None else self.stage
@@ -65,8 +67,12 @@ class Star:
             info += f'# Spectroscopy - vmacro={self.spectroscopic.vmacro}km/s\n'
             info += f'# Spectroscopy - vsini={self.spectroscopic.vsini}km/s\n'
         if self.calibrationInformation:
-            info += f'# \n# Calibration - mass={self.calibration.mass}'
-            info += f'# Calibration - radius={self.calibration.radius}'
+            info += f'# \n# Calibration - mass={self.calibration.mass}Msun\n'
+            info += f'# Calibration - radius={self.calibration.radius}Rsun\n'
+        if self.isochroneInformation:
+            info += f'# \n# Isochrone - mass={self.isochrone.mass}({self.isochrone.masserr})Msun\n'
+            info += f'# \n# Isochrone - radius={self.isochrone.radius}({self.isochrone.radiuserr})Rsun\n'
+            info += f'# \n# Isochrone - age={self.isochrone.age}({self.isochrone.ageerr})Gyr\n'
         info += '#' * 30 + '\n'
         return info
 
@@ -101,6 +107,18 @@ class Star:
         self.calibrationInformation = True
         print('Values can be reached through: Star.calibration.')
 
+    def getIsochrone(self, Teff: Optional[int]=None, logg: Optional[float]=None,
+                     feh: Optional[float]=None) -> None:
+        val_pystar.check_isochrone_input(self.spectroscopicInformation,
+                                         Teff, logg, feh)
+        Teff = self.spectroscopic.Teff if Teff is None else Teff
+        logg = self.spectroscopic.logg if logg is None else logg
+        feh = self.spectroscopic.feh if feh is None else feh
+        self.isochrone = Isochrone((Teff, 50), (logg, 0.05), (feh, 0.05))
+        self.isochrone.getAll()
+        self.isochroneInformation = True
+        print('Values can be reached through: Star.isochrone')
+
 
 if __name__ == '__main__':
     s1 = Star('Arcturus', SpectralType.K2III)
@@ -108,6 +126,8 @@ if __name__ == '__main__':
     s1.getColourInformation(method='Ramirez05', feh=s1.spectroscopic.feh,
                             logg=s1.spectroscopic.logg, B=1.3, V=0.43)
     s1.getSeismicInformation(2.96, 110.54, 4577)
+    s1.getCalibration()
+    s1.getIsochrone()
     print(s1)
 
     s2 = Star('Sun', SpectralType.G2V, Stage.BH)
