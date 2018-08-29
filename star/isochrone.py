@@ -54,6 +54,7 @@ class Isochrone:
         files = ('star.ini', 'starfit.log',
                  'mist_corner_single_observed.png',
                  'mist_corner_single_physical.png',
+                 'mist_starmodel_single.h5',
                  'mist_corner_single.h5')
         for file in files:
             try:

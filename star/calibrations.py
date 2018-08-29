@@ -26,8 +26,8 @@ class Calibrations:
         return np.exp(np.dot(self.v, b))
 
     def getAll(self):
-        self.mass = self.getMass()
-        self.radius = self.getRadius()
+        self.mass = round(self.getMass(), 2)
+        self.radius = round(self.getRadius(), 2)
 
 
 if __name__ == '__main__':

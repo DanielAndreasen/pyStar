@@ -71,8 +71,8 @@ class Star:
             info += f'# Calibration - radius={self.calibration.radius}Rsun\n'
         if self.isochroneInformation:
             info += f'# \n# Isochrone - mass={self.isochrone.mass}({self.isochrone.masserr})Msun\n'
-            info += f'# \n# Isochrone - radius={self.isochrone.radius}({self.isochrone.radiuserr})Rsun\n'
-            info += f'# \n# Isochrone - age={self.isochrone.age}({self.isochrone.ageerr})Gyr\n'
+            info += f'# Isochrone - radius={self.isochrone.radius}({self.isochrone.radiuserr})Rsun\n'
+            info += f'# Isochrone - age={self.isochrone.age}({self.isochrone.ageerr})Gyr\n'
         info += '#' * 30 + '\n'
         return info
 
@@ -122,7 +122,7 @@ class Star:
 
 if __name__ == '__main__':
     s1 = Star('Arcturus', SpectralType.K2III)
-    s1.getSpectroscopicInformation(np.array([1, 2, 3]), np.array([1, 2, 3]))
+    s1.getSpectroscopicInformation(np.array([1, 2, 30000]), np.array([1, 2, 3]))
     s1.getColourInformation(method='Ramirez05', feh=s1.spectroscopic.feh,
                             logg=s1.spectroscopic.logg, B=1.3, V=0.43)
     s1.getSeismicInformation(2.96, 110.54, 4577)

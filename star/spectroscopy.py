@@ -50,7 +50,7 @@ class Spectroscopy:
             raise ValueError('Wavelength coverage is insufficient.')
         self.Teff: int = 4536
         self.logg: float = 3.52
-        self.feh: float = 3.82
+        self.feh: float = 0.82
         self.vmicro: float = 0.85
         self.vmacro: float = 2.43
         self.vsini: float = 4.21
