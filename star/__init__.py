@@ -2,6 +2,7 @@ from star import colour
 from star import seismology
 from star import spectroscopy
 from star import calibrations
+from star import isochrone
 from star import pyStar
 from star import enums
 
